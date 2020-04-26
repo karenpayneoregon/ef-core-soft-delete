@@ -89,8 +89,7 @@ namespace WindowsFrontEnd
 
         }
         /// <summary>
-        /// Show filter counts. As coded we are off by 2 records where Deleted column
-        /// are set to null, this can happen.
+        /// Show filter counts on suppliers model
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

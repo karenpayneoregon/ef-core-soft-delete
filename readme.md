@@ -6,7 +6,17 @@ Microsoft TechNet article
 
 ![screenshot](assets/softdelete1.png)
 
+### Setup
+- Run [the following script](https://github.com/karenpayneoregon/ef-core-soft-delete/blob/master/EntityLibrary/DataScripts/script.sql) to create the database and populate tables.
+- From Visual Studio solution explorer select Restore Nuget packages.
+- Ensure WindowsFrontEnd is the startup project.
+- Build the solution
+- Run
 
+### Requires
+- Microsoft Framework 4.7.2 or higher
+- Microsoft Visual 2017 or higher
+- Microsoft SQL-Server 2012 or higher 
 
 ```csharp
 private void RemoveCurrentSupplierButton_Click(object sender, EventArgs e)

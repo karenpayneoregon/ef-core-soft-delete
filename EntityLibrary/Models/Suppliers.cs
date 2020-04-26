@@ -10,6 +10,7 @@ namespace EntityLibrary
     public partial class Suppliers : ISoftDelete, INotifyPropertyChanged
     {
         private bool? _deleted;
+        private string _companyName;
 
         public Suppliers()
         {
@@ -17,7 +18,17 @@ namespace EntityLibrary
         }
 
         public int SupplierId { get; set; }
-        public string CompanyName { get; set; }
+
+        public string CompanyName
+        {
+            get => _companyName;
+            set
+            {
+                _companyName = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string ContactName { get; set; }
         public string ContactTitle { get; set; }
         public string Address { get; set; }
@@ -25,9 +36,11 @@ namespace EntityLibrary
         public string Region { get; set; }
         public string PostalCode { get; set; }
         public string Country { get; set; }
-
         public string Phone { get; set; }
 
+        /// <summary>
+        /// This column is part of working with soft deletes
+        /// </summary>
         public bool? Deleted
         {
             get => _deleted;
@@ -37,13 +50,15 @@ namespace EntityLibrary
                 OnPropertyChanged();
             }
         }
-
         public virtual ICollection<Products> Products { get; set; }
 
+        /// <summary>
+        /// This column is part of working with soft deletes
+        /// </summary>
         [NotMapped]
         public bool IsDeleted
         { 
-            get => (bool) Deleted;
+            get => Deleted != null && (bool) Deleted;
             set => Deleted = value;
         }
 
