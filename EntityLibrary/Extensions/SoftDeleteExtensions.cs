@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EntityLibrary.Extensions
 {
+    /// <summary>
+    /// Alternate method to code in the dbContext SaveChanges
+    /// </summary>
     public static class SoftDeleteExtensions 
     {
         /// <summary>

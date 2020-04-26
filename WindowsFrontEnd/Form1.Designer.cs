@@ -33,6 +33,7 @@
             this.RemoveCurrentSupplierButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.FilteredCountButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // SuppliersComboBox
@@ -82,11 +83,23 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "Soft deletable = false";
             // 
+            // FilteredCountButton
+            // 
+            this.FilteredCountButton.Enabled = false;
+            this.FilteredCountButton.Location = new System.Drawing.Point(338, 113);
+            this.FilteredCountButton.Name = "FilteredCountButton";
+            this.FilteredCountButton.Size = new System.Drawing.Size(134, 23);
+            this.FilteredCountButton.TabIndex = 5;
+            this.FilteredCountButton.Text = "Filtered count";
+            this.FilteredCountButton.UseVisualStyleBackColor = true;
+            this.FilteredCountButton.Click += new System.EventHandler(this.FilteredCountButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(506, 300);
+            this.Controls.Add(this.FilteredCountButton);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.RemoveCurrentSupplierButton);
@@ -108,6 +121,7 @@
         private System.Windows.Forms.Button RemoveCurrentSupplierButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button FilteredCountButton;
     }
 }
 

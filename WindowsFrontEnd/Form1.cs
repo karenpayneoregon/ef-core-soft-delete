@@ -12,11 +12,20 @@ using WindowsFrontEnd.Classes;
 using WindowsFrontEnd.Extensions;
 using EntityLibrary;
 using EntityLibrary.Extensions;
+using EntityLibrary.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using static WindowsFrontEnd.Classes.Dialogs;
 
 namespace WindowsFrontEnd
 {
+    /// <summary>
+    /// Note since all read data are in ComboBox controls and meant
+    /// for use in a real application for filtering or setting a
+    /// property when editing or adding a record local instances
+    /// of the dbContext are used. There is an example for removing
+    /// a entity from a ComboBox which would not happen in the wild,
+    /// this is for demonstrating how to soft delete.
+    /// </summary>
     public partial class Form1 : Form
     {
         public Form1()
@@ -25,7 +34,13 @@ namespace WindowsFrontEnd
 
             Shown += Form1_Shown;
         }
-
+        private readonly BindingSource _supplierBindingSource = new BindingSource();
+        /// <summary>
+        /// Read data asynchronously for keeping the app responsive on slower
+        /// computers
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void Form1_Shown(object sender, EventArgs e)
         {
 
@@ -37,7 +52,8 @@ namespace WindowsFrontEnd
                         .OrderBy(supplier => supplier.CompanyName)
                         .ToListAsync();
 
-                    SuppliersComboBox.InvokeIfRequired(combobox => combobox.DataSource = suppliers);
+                    _supplierBindingSource.DataSource = suppliers;
+                    SuppliersComboBox.InvokeIfRequired(combobox => combobox.DataSource = _supplierBindingSource);
 
                     var companies = await context.Customers.AsNoTracking().Select(customer =>
                         new CustomerPartial
@@ -47,35 +63,57 @@ namespace WindowsFrontEnd
                         }).ToListAsync();
 
                     
-                    CompanyComboBox.InvokeIfRequired(comboxbox => comboxbox.DataSource = companies);
+                    CompanyComboBox.InvokeIfRequired(combobox => combobox.DataSource = companies);
                 }
 
             });
 
 
             RemoveCurrentSupplierButton.Enabled = SuppliersComboBox.Items.Count > 0;
+            FilteredCountButton.Enabled = RemoveCurrentSupplierButton.Enabled;
         }
 
         private void RemoveCurrentSupplierButton_Click(object sender, EventArgs e)
         {
-            var currentSupplier = SuppliersComboBox.SelectedItem as Suppliers;
+
+            var currentSupplier = _supplierBindingSource.Current as Suppliers;
+
+            if (!Question($"Remove {currentSupplier.CompanyName}")) return;
 
             using (var context = new NorthwindContext())
             {
                 context.Entry(currentSupplier).State = EntityState.Deleted;
                 context.SaveChanges();
+                _supplierBindingSource.RemoveCurrent();
             }
 
-            return;
-            if (Question($"Remove {currentSupplier.CompanyName}"))
+        }
+        /// <summary>
+        /// Show filter counts. As coded we are off by 2 records where Deleted column
+        /// are set to null, this can happen.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FilteredCountButton_Click(object sender, EventArgs e)
+        {
+            var sb = new StringBuilder();
+
+            using (var context = new NorthwindContext())
             {
-                using (var context = new NorthwindContext())
-                {
-                    context.Entry(currentSupplier).SoftDelete();
-                    context.SaveChanges();
-                }
+                // active records
+                var count = context.Suppliers.AsNoTracking().Count();
+                sb.AppendLine($"Not soft deleted: {count}");
+
+                // marked as soft delete
+                count = context.Suppliers.IgnoreQueryFilters().AsNoTracking().Count(s => s.Deleted == true);
+                sb.AppendLine($"soft deleted: {count}");
+
+                // total count of records
+                count = context.Suppliers.IgnoreQueryFilters().AsNoTracking().Count();
+                sb.AppendLine($"Total record count: {count}");
             }
 
+            MessageBox.Show(sb.ToString());
         }
     }
 }

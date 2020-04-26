@@ -357,7 +357,14 @@ namespace EntityLibrary
 
             OnModelCreatingPartial(modelBuilder);
         }
-
+        /// <summary>
+        /// Handles soft deletes
+        /// </summary>
+        /// <returns>Affected count</returns>
+        /// <remarks>
+        /// This code (other than the return statement) can be placed into another
+        /// method e.g. BeforeSave then override the async version of SaveChangesAsync
+        /// </remarks>
         public override int SaveChanges()
         {
             var deletedEntityEntries = ChangeTracker
@@ -395,6 +402,7 @@ namespace EntityLibrary
 
             var falseConst = Expression.Constant(false);
             var expressionCondition = Expression.MakeBinary(ExpressionType.Equal, methodCallExpression, falseConst);
+
             return Expression.Lambda(expressionCondition, parameterExpression);
         }
     }
