@@ -369,7 +369,9 @@ namespace EntityLibrary
         {
             var deletedEntityEntries = ChangeTracker
                 .Entries()
-                .Where(item => item.Entity is ISoftDelete && item.State == EntityState.Deleted).ToList();
+                .Where(item => 
+                    item.Entity is ISoftDelete && 
+                    item.State == EntityState.Deleted).ToList();
 
             foreach (var itemEntityEntry in deletedEntityEntries)
             {

@@ -2,7 +2,7 @@
 
 This repository contains code to show how to use HasQueryFilter to provide soft deletes against any model which implements a specific Interface.
 
-Microsoft TechNet article
+[Microsoft TechNet article](https://social.technet.microsoft.com/wiki/contents/articles/53834.entity-framework-core-3-x-global-query-filters-c.aspx)
 
 ![screenshot](assets/softdelete1.png)
 

@@ -104,7 +104,9 @@ namespace WindowsFrontEnd
                 sb.AppendLine($"Not soft deleted: {count}");
 
                 // marked as soft delete
-                count = context.Suppliers.IgnoreQueryFilters().AsNoTracking().Count(s => s.Deleted == true);
+                count = context.Suppliers.IgnoreQueryFilters().AsNoTracking()
+                    .Count(s => s.Deleted == true);
+
                 sb.AppendLine($"soft deleted: {count}");
 
                 // total count of records
