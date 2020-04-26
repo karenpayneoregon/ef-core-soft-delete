@@ -60,7 +60,13 @@ namespace WindowsFrontEnd
         {
             var currentSupplier = SuppliersComboBox.SelectedItem as Suppliers;
 
-            // ReSharper disable once PossibleNullReferenceException
+            using (var context = new NorthwindContext())
+            {
+                context.Entry(currentSupplier).State = EntityState.Deleted;
+                context.SaveChanges();
+            }
+
+            return;
             if (Question($"Remove {currentSupplier.CompanyName}"))
             {
                 using (var context = new NorthwindContext())

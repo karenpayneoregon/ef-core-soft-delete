@@ -357,6 +357,22 @@ namespace EntityLibrary
 
             OnModelCreatingPartial(modelBuilder);
         }
+
+        public override int SaveChanges()
+        {
+            var deletedEntityEntries = ChangeTracker
+                .Entries()
+                .Where(item => item.Entity is ISoftDelete && item.State == EntityState.Deleted).ToList();
+
+            foreach (var itemEntityEntry in deletedEntityEntries)
+            {
+                ((ISoftDelete)itemEntityEntry.Entity).IsDeleted = true;
+                itemEntityEntry.State = EntityState.Modified;
+            }
+
+            return base.SaveChanges();
+        }
+
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
         /// <summary>
