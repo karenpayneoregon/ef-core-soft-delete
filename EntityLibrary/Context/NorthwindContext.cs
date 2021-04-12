@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using EntityLibrary.Interfaces;
@@ -406,6 +407,15 @@ namespace EntityLibrary
             var expressionCondition = Expression.MakeBinary(ExpressionType.Equal, methodCallExpression, falseConst);
 
             return Expression.Lambda(expressionCondition, parameterExpression);
+        }
+        public void Detect()
+        {
+            var test = (this as IObjectContextAdapter)?
+                .ObjectContext.ObjectStateManager.GetObjectStateEntries((System.Data.Entity.EntityState) EntityState.Added)
+                .Where((oes) => oes.IsRelationship)
+                .Select((oes) => new { EntityKeyInfo = oes.CurrentValues[0], CollectionMemberKeyInfo = oes.CurrentValues[1], oes.State });
+
+            Console.WriteLine();
         }
     }
 }
